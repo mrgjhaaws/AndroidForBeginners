@@ -1,0 +1,60 @@
+// Chapter 2: Setting Up Your Development Environment
+// Topic: what actually lives in a Gradle build config, and why.
+//
+// This isn't a .java file -- Chapter 2 is about project setup, not
+// application code. This is an annotated, illustrative build.gradle
+// (Groovy DSL) showing the pieces a beginner setup touches most.
+
+/*
+ UNSOLVED (exercise) -- this config will fail to build.
+ Task: minSdk is higher than targetSdk, which doesn't make sense
+ (you can't require a NEWER minimum OS than the version you're
+ targeting/testing against). Find the bug.
+
+ android {
+     compileSdk 34
+     defaultConfig {
+         minSdk 35        // <-- bug: minSdk can't exceed targetSdk
+         targetSdk 34
+     }
+ }
+*/
+
+// SOLVED
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.codingcompany.androidbeginners'
+    compileSdk 34 // the API level Gradle compiles your code against
+
+    defaultConfig {
+        applicationId "com.codingcompany.androidbeginners"
+        minSdk 24     // oldest Android version the app will install on
+        targetSdk 34  // API level this app is designed/tested for
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true // shrinks/obfuscates code for the release build
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false // keep debug builds fast and readable
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    testImplementation 'junit:junit:4.13.2'
+}
